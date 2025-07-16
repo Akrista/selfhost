@@ -1,0 +1,24 @@
+name: jdownloader
+networks:
+  default:
+    name: ${DOCKER_NETWORK:-services}
+    external: true
+services:
+  jdownloader:
+    image: antlafarge/jdownloader:alpine
+    container_name: jdownloader
+    restart: unless-stopped
+    user: 1000:1000
+    volumes:
+      - ${DATA_DIR:-./data}:/jdownloader/cfg/
+      - ${DOWN_DIR:-/downloads}:/jdownloader/downloads/
+    environment:
+      JD_EMAIL: ${EMAIL}
+      JD_PASSWORD: ${PASSWORD}
+      JD_DEVICENAME: ${DEVICENAME}
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+      - glance.name=JDownloader
+      - glance.icon=https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/jdownloader.png
+      - glance.url=https://my.jdownloader.org/
+      - glance.description=JDownloader is a free download manager that allows you to quickly and efficiently download files from services such as Rapidshare, Megaupload, etc.

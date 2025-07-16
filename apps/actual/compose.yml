@@ -1,3 +1,4 @@
+name: actual
 networks:
   default:
     name: ${DOCKER_NETWORK:-proxy}

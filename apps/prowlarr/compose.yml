@@ -1,0 +1,26 @@
+name: prowlarr
+networks:
+  default:
+    name: ${DOCKER_NETWORK:-proxy}
+    external: true
+services:
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    restart: unless-stopped
+    # ports:
+    #   - 9696:9696
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: ${TZ:-America/Caracas}
+      DOCKER_MODS: ghcr.io/themepark-dev/theme.park:prowlarr
+      TP_THEME: dark
+    volumes:
+      - ${CFG_DIR:-./cfg}:/config
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+      - glance.icon=di:prowlarr
+      - glance.url=${GLANCE_URL}
+      - glance.name=Prowlarr
+      - glance.description=Prowlarr is a PVR for Usenet and BitTorrent users.

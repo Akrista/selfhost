@@ -1,0 +1,20 @@
+name: flaresolverr
+networks:
+  default:
+    name: ${DOCKER_NETWORK:-proxy}
+    external: true
+services:
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    environment:
+      LOG_LEVEL: info
+      TZ: ${TZ:-America/Caracas}
+    # ports:
+    # - 8191:8191
+    restart: unless-stopped
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+      - glance.icon=di:flaresolverr
+      - glance.name=Flaresolverr
+      - glance.description=Flaresolverr is a proxy that allows you to scrape websites that use Cloudflare's anti-bot page.

@@ -1,0 +1,4 @@
+- type: dns-stats
+  service: pihole-v6
+  url: ${PIHOLEURL}
+  password: ${PIHOLEPASS}

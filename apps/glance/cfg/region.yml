@@ -1,0 +1,13 @@
+- type: clock
+  hour-format: 12h
+  timezones:
+    - timezone: America/Bogota
+      label: Colombia
+    - timezone: Europe/Madrid
+      label: España
+- type: calendar
+  first-day-of-week: monday
+- type: weather
+  location: Caracas, Venezuela
+  units: metric # alternatively "imperial"
+  hour-format: 12h # alternatively "24h"

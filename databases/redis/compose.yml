@@ -1,0 +1,28 @@
+name: redis
+networks:
+  default:
+    name: ${DOCKER_NETWORK:-databases}
+    external: true
+services:
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - ${PORT:-6379}:6379
+    environment:
+      TZ: ${TZ:-America/Caracas}
+      REDIS_PASSWORD: ${PASS}
+    command: redis-server --requirepass ${PASS} --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${PASS}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    volumes:
+      - ${DATA_DIR:-./data}:/data
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+      - glance.icon=di:redis
+      - glance.name=Redis
+      - glance.description=Redis is an open source, in-memory data structure store, used as a database, cache and message broker.

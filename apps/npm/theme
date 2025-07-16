@@ -1,7 +1,7 @@
 #!/command/with-contenv bash
 
 echo '--------------------------------------'
-echo '| Nginx Proxy Manager theme.park Mod |' 
+echo '| Nginx Proxy Manager theme.park Mod |'
 echo '--------------------------------------'
 
 if [[ -d "/app/frontend" ]]; then
@@ -10,7 +10,7 @@ else
     APP_FILEPATH='/opt/nginx-proxy-manager/frontend/' # jlesage/nginx-proxy-manager
 fi
 
-# Display variables for troubleshooting 
+# Display variables for troubleshooting
 echo -e "Variables set:\\n\
 'APP_FILEPATH'=${APP_FILEPATH}\\n\
 'TP_DOMAIN'=${TP_DOMAIN}\\n\
@@ -42,7 +42,7 @@ esac
 
 if [[ -z ${TP_THEME} ]]; then
     echo 'No theme set, defaulting to organizr'
-    TP_THEME='dark'
+    TP_THEME='organizr'
 fi
 
 sed_file(){

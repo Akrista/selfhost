@@ -19,6 +19,7 @@ services:
       DB_MYSQL_PASSWORD: ${DB_PASS}
       DB_MYSQL_NAME: ${DB}
       TZ: ${TZ:-America/Caracas}
+      TP_THEME: dark
     healthcheck:
       test: ["CMD", "/usr/bin/check-health"]
       interval: 10s

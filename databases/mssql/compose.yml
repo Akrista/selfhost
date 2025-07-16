@@ -1,0 +1,27 @@
+name: mssql
+networks:
+  default:
+    name: ${DOCKER_NETWORK:-databases}
+    external: true
+services:
+  mssqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: mssql
+    restart: unless-stopped
+    hostname: mssqlserver
+    ports:
+      - ${PORT:-1433}:1433
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${PASS}
+      - TZ=${TZ:-America/Caracas}
+      - MSSQL_PID=Express
+    #When using volumes is best to set user root cuz microsoft doesn't know how to properly set PID and GID...
+    user: root
+    volumes:
+      - ${DATA_DIR:-./data}:/var/opt/mssql
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+      - glance.icon=di:microsoft-sql-server-light
+      - glance.name=Microsoft SQL Server
+      - glance.description=Microsoft SQL Server 2019 Express Edition

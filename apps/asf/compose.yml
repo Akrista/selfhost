@@ -1,0 +1,22 @@
+name: asf
+networks:
+  default:
+    name: ${DOCKER_NETWORK:-proxy}
+    external: true
+services:
+  asf:
+    image: justarchi/archisteamfarm:latest
+    container_name: asf
+    # ports:
+    #   - 1242:1242
+    environment:
+      TZ: ${TZ:-America/Caracas}
+    volumes:
+      - ${CFG_DIR:-./cfg}:/app/config
+    restart: unless-stopped
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+      - glance.icon=https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/archisteamfarm.png
+      - glance.url=${GLANCE_URL}
+      - glance.name=Archi Steam Farm
+      - glance.description=Archi Steam Farm is a program that allows you to farm Steam games and cards automatically.

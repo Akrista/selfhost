@@ -1,0 +1,18 @@
+networks:
+  default:
+    name: ${DOCKER_NETWORK:-proxy}
+    external: true
+services:
+  newt:
+    image: fosrl/newt
+    container_name: newt
+    restart: unless-stopped
+    environment:
+      - PANGOLIN_ENDPOINT=${ENDPOINT}
+      - NEWT_ID=${ID}
+      - NEWT_SECRET=${SECRET}
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+      - glance.icon=di:pangolin
+      - glance.name=Newt
+      - glance.description=Tunneling client for Pangolin

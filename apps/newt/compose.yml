@@ -1,3 +1,4 @@
+name: newt
 networks:
   default:
     name: ${DOCKER_NETWORK:-proxy}

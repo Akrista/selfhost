@@ -21,7 +21,7 @@ FreeBind=yes
 
 ```conf
 [WebService]
-Origins = http://cockpit.notakrista.com ws://cockpit.notakrista.com https://cockpit.notakrista.com wss://cockpit.notakrista.com
+Origins = http://cockpit.domain.com ws://cockpit.domain.com https://cockpit.domain.com wss://cockpit.domain.com
 ProtocolHeader = X-Forwarded-Proto
 AllowUnencrypted=true
 ```

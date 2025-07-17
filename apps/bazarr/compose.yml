@@ -1,6 +1,6 @@
 name: bazarr
 networks:
-  default:
+  proxy:
     name: ${DOCKER_NETWORK:-proxy}
     external: true
 services:
@@ -8,6 +8,9 @@ services:
     image: lscr.io/linuxserver/bazarr:latest
     container_name: bazarr
     restart: unless-stopped
+    profiles: [app]
+    networks:
+      - proxy
     # ports:
     #   - 6767:6767
     environment:

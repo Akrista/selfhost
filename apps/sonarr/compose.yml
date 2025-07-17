@@ -1,6 +1,6 @@
 name: sonarr
 networks:
-  default:
+  proxy:
     name: ${DOCKER_NETWORK:-proxy}
     external: true
 services:
@@ -8,6 +8,9 @@ services:
     image: linuxserver/sonarr
     container_name: sonarr
     restart: unless-stopped
+    profiles: [app]
+    networks:
+      - proxy
     # ports:
     #   - 8989:8989
     environment:

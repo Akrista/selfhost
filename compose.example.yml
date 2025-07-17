@@ -1,0 +1,29 @@
+name: ${STACK_NAME:-selfhost}
+include:
+  # services
+  - services/endlessh/compose.yml
+  - services/jdownloader/compose.yml
+  - services/watchtower/compose.yml
+  # databases
+  - databases/mariadb/compose.yml
+  - databases/mssql/compose.yml
+  - databases/postgres/compose.yml
+  - databases/redis/compose.yml
+  # apps
+  - apps/actual/compose.yml
+  - apps/asf/compose.yml
+  - apps/bazarr/compose.yml
+  - apps/excalidraw/compose.yml
+  - apps/flaresolverr/compose.yml
+  - apps/glance/compose.yml
+  - apps/hoppscotch/compose.yml
+  - apps/jackett/compose.yml
+  - apps/newt/compose.yml
+  - apps/npm/compose.yml
+  - apps/pihole/compose.yml
+  - apps/portainer/compose.yml
+  - apps/prowlarr/compose.yml
+  - apps/qbittorrent/compose.yml
+  - apps/radarr/compose.yml
+  - apps/sonarr/compose.yml
+  - apps/syncthing/compose.yml

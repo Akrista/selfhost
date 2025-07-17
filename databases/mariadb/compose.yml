@@ -1,6 +1,6 @@
 name: mariadb
 networks:
-  default:
+  database:
     name: ${DOCKER_NETWORK:-databases}
     external: true
 services:
@@ -8,6 +8,9 @@ services:
     image: mariadb
     container_name: mariadb
     restart: unless-stopped
+    profiles: [database]
+    networks:
+      - database
     ports:
       - ${PORT:-3306}:3306
     environment:

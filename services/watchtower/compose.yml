@@ -1,6 +1,6 @@
 name: watchtower
 networks:
-  default:
+  service:
     name: ${DOCKER_NETWORK:-services}
     external: true
 services:
@@ -8,6 +8,9 @@ services:
     image: containrrr/watchtower
     container_name: watchtower
     restart: unless-stopped
+    profiles: [service]
+    networks:
+      - service
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:

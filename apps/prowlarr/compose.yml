@@ -1,6 +1,6 @@
 name: prowlarr
 networks:
-  default:
+  proxy:
     name: ${DOCKER_NETWORK:-proxy}
     external: true
 services:
@@ -8,6 +8,9 @@ services:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
     restart: unless-stopped
+    profiles: [app]
+    networks:
+      - proxy
     # ports:
     #   - 9696:9696
     environment:

@@ -3,3 +3,4 @@ data
 cfg
 certs
 acme.json
+/compose.yml

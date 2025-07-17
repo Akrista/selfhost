@@ -1,16 +1,18 @@
 name: excalidraw
 networks:
-  default:
+  proxy:
     name: ${DOCKER_NETWORK:-proxy}
     external: true
 services:
   excalidraw:
-    build:
-      context: ./excalidraw
+    image: excalidraw/excalidraw
     container_name: excalidraw
+    restart: unless-stopped
+    profiles: [app]
+    networks:
+      - proxy
     # ports:
     #   - 80:80
-    restart: unless-stopped
     stdin_open: true
     mem_limit: 10mb
     labels:

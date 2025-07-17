@@ -1,6 +1,6 @@
 name: hoppscotch
 networks:
-  default:
+  proxy:
     name: ${DOCKER_NETWORK:-proxy}
     external: true
   database:
@@ -10,12 +10,13 @@ services:
   hoppscotch:
     image: hoppscotch/hoppscotch
     container_name: hoppscotch
+    restart: unless-stopped
+    profiles: [app]
+    networks:
+      - proxy
+      - database
     # ports:
     #   - 80:80
-    restart: unless-stopped
-    networks:
-      - default
-      - database
     env_file:
       - .env
     labels:

@@ -1,6 +1,6 @@
 name: npm
 networks:
-  default:
+  proxy:
     name: ${DOCKER_NETWORK:-proxy}
     external: true
 services:
@@ -8,6 +8,9 @@ services:
     image: docker.io/jc21/nginx-proxy-manager:latest
     container_name: npm
     restart: unless-stopped
+    profiles: [app]
+    networks:
+      - proxy
     ports:
       - 80:80
       - 443:443

@@ -1,6 +1,6 @@
 name: radarr
 networks:
-  default:
+  proxy:
     name: ${DOCKER_NETWORK:-proxy}
     external: true
 services:
@@ -8,6 +8,9 @@ services:
     image: linuxserver/radarr
     container_name: radarr
     restart: unless-stopped
+    profiles: [app]
+    networks:
+      - proxy
     # ports:
     #   - 7878:7878
     environment:

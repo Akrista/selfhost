@@ -1,6 +1,6 @@
 name: glance
 networks:
-  default:
+  proxy:
     name: ${DOCKER_NETWORK:-proxy}
     external: true
 services:
@@ -8,6 +8,9 @@ services:
     container_name: glance
     image: glanceapp/glance
     restart: unless-stopped
+    profiles: [app]
+    networks:
+      - proxy
     # ports:
     #   - 8080:8080
     env_file: .env

@@ -1,6 +1,6 @@
 name: newt
 networks:
-  default:
+  proxy:
     name: ${DOCKER_NETWORK:-proxy}
     external: true
 services:
@@ -8,6 +8,9 @@ services:
     image: fosrl/newt
     container_name: newt
     restart: unless-stopped
+    profiles: [app]
+    networks:
+      - proxy
     environment:
       PANGOLIN_ENDPOINT: ${ENDPOINT}
       NEWT_ID: ${ID}

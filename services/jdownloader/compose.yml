@@ -1,6 +1,6 @@
 name: jdownloader
 networks:
-  default:
+  service:
     name: ${DOCKER_NETWORK:-services}
     external: true
 services:
@@ -8,6 +8,9 @@ services:
     image: antlafarge/jdownloader:alpine
     container_name: jdownloader
     restart: unless-stopped
+    profiles: [service]
+    networks:
+      - service
     user: 1000:1000
     volumes:
       - ${DATA_DIR:-./data}:/jdownloader/cfg/

@@ -1,14 +1,15 @@
-name: jdownloader
+name: ${STACK_NAME:-jdownloader}
 networks:
   service:
-    name: ${DOCKER_NETWORK:-services}
+    name: ${SERVICE_NETWORK:-service}
     external: true
 services:
   jdownloader:
     image: antlafarge/jdownloader:alpine
     container_name: jdownloader
     restart: unless-stopped
-    profiles: [service]
+    profiles:
+      - ${SERVICE_PROFILE:-service}
     networks:
       - service
     user: 1000:1000

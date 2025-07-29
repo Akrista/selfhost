@@ -1,14 +1,15 @@
-name: mariadb
+name: ${STACK_NAME:-mariadb}
 networks:
   database:
-    name: ${DOCKER_NETWORK:-databases}
+    name: ${DATABASE_NETWORK:-database}
     external: true
 services:
   mariadb:
     image: mariadb
     container_name: mariadb
     restart: unless-stopped
-    profiles: [database]
+    profiles:
+      - ${SERVICE_PROFILE:-database}
     networks:
       - database
     ports:

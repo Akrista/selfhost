@@ -1,14 +1,15 @@
-name: syncthing
+name: ${STACK_NAME:-syncthing}
 networks:
   proxy:
-    name: ${DOCKER_NETWORK:-proxy}
+    name: ${PROXY_NETWORK:-proxy}
     external: true
 services:
   syncthing:
     image: syncthing/syncthing
     container_name: syncthing
     restart: unless-stopped
-    profiles: [app]
+    profiles:
+      - ${SERVICE_PROFILE:-app}
     hostname: ${HOSTNAME}
     # network_mode: host
     networks:

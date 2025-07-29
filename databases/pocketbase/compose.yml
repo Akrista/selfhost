@@ -1,0 +1,41 @@
+name: ${STACK_NAME:-pocketbase}
+networks:
+  proxy:
+    name: ${PROXY_NETWORK:-proxy}
+    external: true
+  database:
+    name: ${DATABASE_NETWORK:-database}
+    external: true
+services:
+  pocketbase:
+    image: ghcr.io/muchobien/pocketbase
+    container_name: pocketbase
+    restart: unless-stopped
+    profiles:
+      - ${SERVICE_PROFILE:-database}
+    networks:
+      - proxy
+      - database
+    # ports:
+    #   - 8090:8090
+    command:
+      - --encryptionEnv # optional
+      - ENCRYPTION # optional
+    environment:
+      # openssl rand -hex 16 # optional (Ensure this is a 32-character long encryption key https://pocketbase.io/docs/going-to-production/#enable-settings-encryption)
+      ENCRYPTION: ${ENCRYPTION}
+    volumes:
+      - ${DATA_DIR:-./data}:/pb_data
+      - ${PUBLIC_DIR:-./public}:/pb_public # optional
+      - ${HOOKS_DIR:-./hooks}:/pb_hooks # optional
+    healthcheck: # optional, recommended since v0.10.0
+      test: wget --no-verbose --tries=1 --spider http://localhost:8090/api/health || exit 1
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+      - glance.icon=di:pocketbase
+      - glance.url=${GLANCE_URL}
+      - glance.name=PocketBase
+      - glance.description=PocketBase is a lightweight, open-source, self-hosted backend for building modern web and mobile applications.

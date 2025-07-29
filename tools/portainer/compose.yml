@@ -1,0 +1,27 @@
+name: ${STACK_NAME:-portainer}
+networks:
+  proxy:
+    name: ${TOOL_NETWORK:-proxy}
+    external: true
+services:
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+    profiles:
+      - ${SERVICE_PROFILE:-tool}
+    networks:
+      - proxy
+    # ports:
+    #   - 9000:9000
+    environment:
+      TZ: ${TZ:-America/Caracas}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${DATA_DIR:-./data}:/data
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+      - glance.icon=di:portainer
+      - glance.url=${GLANCE_URL}
+      - glance.name=Portainer
+      - glance.description=Portainer is a powerful management UI which allows you to easily manage your Docker containers, images, networks and volumes.

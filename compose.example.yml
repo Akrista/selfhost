@@ -1,9 +1,5 @@
 name: ${STACK_NAME:-selfhost}
 include:
-  # services
-  - services/endlessh/compose.yml
-  - services/jdownloader/compose.yml
-  - services/watchtower/compose.yml
   # databases
   - databases/mariadb/compose.yml
   - databases/mssql/compose.yml
@@ -12,18 +8,23 @@ include:
   # apps
   - apps/actual/compose.yml
   - apps/asf/compose.yml
-  - apps/bazarr/compose.yml
-  - apps/excalidraw/compose.yml
-  - apps/flaresolverr/compose.yml
   - apps/glance/compose.yml
-  - apps/hoppscotch/compose.yml
-  - apps/jackett/compose.yml
-  - apps/newt/compose.yml
-  - apps/npm/compose.yml
-  - apps/pihole/compose.yml
-  - apps/portainer/compose.yml
-  - apps/prowlarr/compose.yml
-  - apps/qbittorrent/compose.yml
-  - apps/radarr/compose.yml
-  - apps/sonarr/compose.yml
   - apps/syncthing/compose.yml
+  # servarr
+  - servarr/bazarr/compose.yml
+  - servarr/flaresolverr/compose.yml
+  - servarr/jackett/compose.yml
+  - servarr/prowlarr/compose.yml
+  - servarr/qbittorrent/compose.yml
+  - servarr/radarr/compose.yml
+  - servarr/sonarr/compose.yml
+  # services
+  - services/endlessh/compose.yml
+  - services/newt/compose.yml
+  - services/npm/compose.yml
+  - services/pihole/compose.yml
+  - services/watchtower/compose.yml
+  # tools
+  - tools/excalidraw/compose.yml
+  - tools/hoppscotch/compose.yml
+  - tools/portainer/compose.yml

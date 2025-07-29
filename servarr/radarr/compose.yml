@@ -1,0 +1,33 @@
+name: ${STACK_NAME:-radarr}
+networks:
+  proxy:
+    name: ${PROXY_NETWORK:-proxy}
+    external: true
+services:
+  radarr:
+    image: linuxserver/radarr
+    container_name: radarr
+    restart: unless-stopped
+    profiles:
+      - ${SERVICE_PROFILE:-servarr}
+    networks:
+      - proxy
+    # ports:
+    #   - 7878:7878
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: ${TZ:-America/Caracas}
+      UMASK_SET: 022 #optional
+      DOCKER_MODS: ghcr.io/themepark-dev/theme.park:radarr
+      TP_THEME: dark
+    volumes:
+      - ${CFG_DIR:-./cfg}:/config
+      - ${DATA_DIR:-./data}:/data
+      - ${DOWN_DIR:-./downloads}:/downloads
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+      - glance.icon=di:radarr
+      - glance.url=${GLANCE_URL}
+      - glance.name=Radarr
+      - glance.description=Radarr is a fork of Sonarr, a PVR for usenet and bittorrent users. It watches for movies and can automatically grab, sort, and rename them. It can also download subtitles and artwork.

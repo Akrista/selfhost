@@ -1,0 +1,28 @@
+name: ${STACK_NAME:-hoppscotch}
+networks:
+  proxy:
+    name: ${TOOL_NETWORK:-proxy}
+    external: true
+  database:
+    name: ${DATABASE_NETWORK:-database}
+    external: true
+services:
+  hoppscotch:
+    image: hoppscotch/hoppscotch
+    container_name: hoppscotch
+    restart: unless-stopped
+    profiles:
+      - ${SERVICE_PROFILE:-tool}
+    networks:
+      - proxy
+      - database
+    # ports:
+    #   - 80:80
+    env_file:
+      - .env
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+      - glance.icon=di:hoppscotch
+      - glance.url=${GLANCE_URL}
+      - glance.name=Hoppscotch
+      - glance.description=Hoppscotch is an open-source API development ecosystem.

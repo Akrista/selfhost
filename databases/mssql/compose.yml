@@ -1,24 +1,25 @@
-name: mssql
+name: ${STACK_NAME:-mssql}
 networks:
   database:
-    name: ${DOCKER_NETWORK:-databases}
+    name: ${DATABASE_NETWORK:-database}
     external: true
 services:
   mssqlserver:
     image: mcr.microsoft.com/mssql/server:2019-latest
     container_name: mssql
     restart: unless-stopped
-    profiles: [database]
+    profiles:
+      - ${SERVICE_PROFILE:-database}
     hostname: mssqlserver
     networks:
       - database
     ports:
       - ${PORT:-1433}:1433
     environment:
-      - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=${PASS}
-      - TZ=${TZ:-America/Caracas}
-      - MSSQL_PID=Express
+      ACCEPT_EULA: Y
+      MSSQL_SA_PASSWORD: ${PASS}
+      TZ: ${TZ:-America/Caracas}
+      MSSQL_PID: Express
     #When using volumes is best to set user root cuz microsoft doesn't know how to properly set PID and GID...
     user: root
     volumes:

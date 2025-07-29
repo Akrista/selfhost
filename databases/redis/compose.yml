@@ -1,14 +1,15 @@
-name: redis
+name: ${STACK_NAME:-redis}
 networks:
   database:
-    name: ${DOCKER_NETWORK:-databases}
+    name: ${DATABASE_NETWORK:-database}
     external: true
 services:
   redis:
     image: redis:alpine
     container_name: redis
     restart: unless-stopped
-    profiles: [database]
+    profiles:
+      - ${SERVICE_PROFILE:-database}
     networks:
       - database
     ports:

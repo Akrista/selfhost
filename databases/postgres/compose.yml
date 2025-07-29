@@ -1,14 +1,15 @@
-name: postgres
+name: ${STACK_NAME:-postgres}
 networks:
   database:
-    name: ${DOCKER_NETWORK:-databases}
+    name: ${DATABASE_NETWORK:-database}
     external: true
 services:
   postgres:
     image: postgres:17-alpine
     container_name: postgres
     restart: unless-stopped
-    profiles: [database]
+    profiles:
+      - ${SERVICE_PROFILE:-database}
     stop_signal: SIGINT
     networks:
       - database

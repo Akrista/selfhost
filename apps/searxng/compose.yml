@@ -1,0 +1,28 @@
+name: ${STACK_NAME:-searxng}
+networks:
+  proxy:
+    name: ${PROXY_NETWORK:-proxy}
+    external: true
+services:
+  searxng:
+    image: searxng/searxng:latest
+    container_name: searxng
+    restart: unless-stopped
+    profiles:
+      - ${SERVICE_PROFILE:-app}
+    networks:
+      - proxy
+    environment:
+      PUID: 1000
+      PGID: 1000
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ${DATA_DIR:-./data}:/etc/searxng:rw
+      - ${CACHE_DIR:-./cache}:/var/cache/searxng:rw
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+      - glance.icon=di:searxng
+      - glance.url=${GLANCE_URL}
+      - glance.name=SearXNG
+      - glance.description=SearXNG is a free internet meta search engine.

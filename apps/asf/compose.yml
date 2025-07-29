@@ -1,14 +1,15 @@
-name: asf
+name: ${STACK_NAME:-asf}
 networks:
   proxy:
-    name: ${DOCKER_NETWORK:-proxy}
+    name: ${PROXY_NETWORK:-proxy}
     external: true
 services:
   asf:
     image: justarchi/archisteamfarm:latest
     container_name: asf
     restart: unless-stopped
-    profiles: [app]
+    profiles:
+      - ${SERVICE_PROFILE:-app}
     networks:
       - proxy
     # ports:

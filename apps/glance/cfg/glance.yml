@@ -14,6 +14,16 @@ pages:
           - type: docker-containers
             hide-by-default: false
           - $include: monitor.yml
+          # - type: monitor
+          #   cache: 60m
+          #   title: domain.com
+          #   sites:
+          #     - title: Portainer
+          #       url: https://portainer.domain.com
+          #       icon: di:portainer
+          #     - title: Upptime
+          #       url: https://upttime.domain.com
+          #       icon: https://raw.githubusercontent.com/upptime/upptime/refs/heads/master/assets/upptime-icon.svg
       - size: small
         widgets:
           - type: server-stats

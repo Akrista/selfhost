@@ -1,14 +1,15 @@
-name: glance
+name: ${STACK_NAME:-glance}
 networks:
   proxy:
-    name: ${DOCKER_NETWORK:-proxy}
+    name: ${PROXY_NETWORK:-proxy}
     external: true
 services:
   glance:
     container_name: glance
     image: glanceapp/glance
     restart: unless-stopped
-    profiles: [app]
+    profiles:
+      - ${SERVICE_PROFILE:-app}
     networks:
       - proxy
     # ports:

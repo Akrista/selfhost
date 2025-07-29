@@ -1,14 +1,15 @@
-name: actual
+name: ${STACK_NAME:-actual}
 networks:
   proxy:
-    name: ${DOCKER_NETWORK:-proxy}
+    name: ${PROXY_NETWORK:-proxy}
     external: true
 services:
   actual:
     image: docker.io/actualbudget/actual-server:latest-alpine
     container_name: actual
     restart: unless-stopped
-    profiles: [app]
+    profiles:
+      - ${SERVICE_PROFILE:-app}
     networks:
       - proxy
     # ports:

@@ -1,14 +1,15 @@
-name: endlessh
+name: ${STACK_NAME:-endlessh}
 networks:
   service:
-    name: ${DOCKER_NETWORK:-services}
+    name: ${SERVICE_NETWORK:-service}
     external: true
 services:
   endlessh:
     image: shizunge/endlessh-go
     container_name: endlessh
     restart: unless-stopped
-    profiles: [service]
+    profiles:
+      - ${SERVICE_PROFILE:-service}
     networks:
       - service
     ports:

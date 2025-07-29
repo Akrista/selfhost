@@ -1,0 +1,39 @@
+name: ${STACK_NAME:-sonarr}
+networks:
+  proxy:
+    name: ${PROXY_NETWORK:-proxy}
+    external: true
+services:
+  sonarr:
+    image: linuxserver/sonarr
+    container_name: sonarr
+    restart: unless-stopped
+    profiles:
+      - ${SERVICE_PROFILE:-servarr}
+    networks:
+      - proxy
+    # ports:
+    #   - 8989:8989
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: ${TZ:-America/Caracas}
+      UMASK_SET: 022
+      DOCKER_MODS: ghcr.io/themepark-dev/theme.park:sonarr
+      TP_THEME: dark
+    volumes:
+      - ${CFG_DIR:-./cfg}:/config
+      - ${DATA_DIR:-./data}:/data
+      - ${DOWN_DIR:-./downloads}:/downloads
+    healthcheck:
+      interval: 5m
+      retries: 5
+      start_period: 2m
+      test: ["CMD-SHELL", "curl --fail http://localhost:8989 || exit 1"]
+      timeout: 20s
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+      - glance.icon=di:sonarr
+      - glance.url=${GLANCE_URL}
+      - glance.name=Sonarr
+      - glance.description=Sonarr is a PVR for Usenet and BitTorrent users. It downloads, sorts, and renames files automatically.

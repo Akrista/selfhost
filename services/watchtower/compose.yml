@@ -1,24 +1,25 @@
-name: watchtower
+name: ${STACK_NAME:-watchtower}
 networks:
   service:
-    name: ${DOCKER_NETWORK:-services}
+    name: ${SERVICE_NETWORK:-service}
     external: true
 services:
   watchtower:
     image: containrrr/watchtower
     container_name: watchtower
     restart: unless-stopped
-    profiles: [service]
+    profiles:
+      - ${SERVICE_PROFILE:-service}
     networks:
       - service
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       TZ: ${TZ:-America/Caracas}
-      WATCHTOWER_CLEANUP: true
-      WATCHTOWER_LABEL_ENABLE: true
-      WATCHTOWER_INCLUDE_RESTARTING: true
-      WATCHTOWER_SCHEDULE: 0 0 1 * * *
+      WATCHTOWER_CLEANUP: ${WATCHTOWER_CLEANUP:-true}
+      WATCHTOWER_LABEL_ENABLE: ${WATCHTOWER_LABEL_ENABLE:-true}
+      WATCHTOWER_INCLUDE_RESTARTING: ${WATCHTOWER_INCLUDE_RESTARTING:-true}
+      WATCHTOWER_SCHEDULE: ${WATCHTOWER_SCHEDULE:-0 0 1 * * *}
     healthcheck:
       test: ["CMD", "/watchtower", "--health-check"]
       interval: 30s

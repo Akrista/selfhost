@@ -1,0 +1,114 @@
+name: ${STACK_NAME:-pangolin}
+networks:
+  default:
+    name: ${SERVICE_NETWORK:-service}
+    external: true
+services:
+  crowdsec:
+    image: crowdsecurity/crowdsec:latest
+    container_name: crowdsec
+    restart: unless-stopped
+    ports:
+      - 6060:6060
+    environment:
+      TZ: ${TZ:-America/Caracas}
+      COLLECTIONS: crowdsecurity/traefik crowdsecurity/appsec-virtual-patching crowdsecurity/appsec-generic-rules
+      ENROLL_INSTANCE_NAME: pangolin-crowdsec
+      ENROLL_TAGS: docker
+      GID: 1000
+      PARSERS: crowdsecurity/whitelists
+    volumes:
+      - ${CFG_DIR:-./cfg}/crowdsec:/etc/crowdsec
+      - ${CFG_DIR:-./cfg}/crowdsec/db:/var/lib/crowdsec/data
+      - ${CFG_DIR:-./cfg}/traefik/logs:/var/log/traefik
+    command: -t
+    healthcheck:
+      interval: 10s
+      retries: 15
+      test:
+        - CMD
+        - cscli
+        - capi
+        - status
+      timeout: 10s
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+      - glance.icon=di:crowdsec
+      - glance.name=Crowdsec
+      - glance.description=Crowdsec botnet detection and mitigation system.
+      - traefik.enable=false
+  gerbil:
+    image: fosrl/gerbil
+    container_name: gerbil
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    ports:
+      - 51820:51820/udp
+      - 443:443
+      - 80:80
+    environment:
+      TZ: ${TZ:-America/Caracas}
+    command:
+      - --reachableAt=http://gerbil:3003
+      - --generateAndSaveKeyTo=/var/config/key
+      - --remoteConfig=http://pangolin:3001/api/v1/gerbil/get-config
+      - --reportBandwidthTo=http://pangolin:3001/api/v1/gerbil/receive-bandwidth
+    depends_on:
+      pangolin:
+        condition: service_healthy
+    volumes:
+      - ${CFG_DIR:-./cfg}/:/var/config
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+      - glance.icon=di:pangolin
+      - glance.name=Gerbil
+      - glance.description=Gerbil acts as the intermediary for managing WireGuard tunnels.
+  pangolin:
+    image: fosrl/pangolin
+    container_name: pangolin
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ:-America/Caracas}
+    healthcheck:
+      interval: 10s
+      retries: 15
+      test:
+        - CMD
+        - curl
+        - -f
+        - http://localhost:3001/api/v1/
+      timeout: 10s
+    volumes:
+      - ${CFG_DIR:-./cfg}:/app/config
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+      - glance.icon=di:pangolin
+      - glance.url=${GLANCE_URL}
+      - glance.name=Pangolin
+      - glance.description=Pangolin is a self-hosted tunneled reverse proxy server.
+  traefik:
+    image: traefik
+    container_name: traefik
+    restart: unless-stopped
+    network_mode: service:gerbil
+    environment:
+      TZ: ${TZ:-America/Caracas}
+      CLOUDFLARE_DNS_API_TOKEN: ${CF_TOKEN}
+    command:
+      - --configFile=/etc/traefik/traefik_config.yml
+    depends_on:
+      crowdsec:
+        condition: service_healthy
+      pangolin:
+        condition: service_healthy
+    volumes:
+      - ${CFG_DIR:-./cfg}/traefik:/etc/traefik:ro
+      - ${CFG_DIR:-./cfg}/letsencrypt:/letsencrypt
+      - ${CFG_DIR:-./cfg}/traefik/logs:/var/log/traefik
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+      - glance.icon=di:traefik
+      - glance.name=Traefik
+      - glance.description=Traefik is a modern HTTP reverse proxy and load balancer that makes deploying microservices easy. It supports multiple backends (Docker, Swarm, Kubernetes, AWS ELB, ...) and multiple frontend rules (Host, Path, Method, Headers, Query, ...) and can be extended with plugins.

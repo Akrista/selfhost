@@ -1,0 +1,28 @@
+name: ${STACK_NAME:-nocodb}
+networks:
+  proxy:
+    name: ${PROXY_NETWORK:-proxy}
+    external: true
+  database:
+    name: ${DATABASE_NETWORK:-database}
+    external: true
+services:
+  nocodb:
+    image: nocodb/nocodb:latest
+    container_name: nocodb
+    restart: unless-stopped
+    # ports:
+    #   - 8080:8080
+    networks:
+      - proxy
+      - database
+    environment:
+      NC_DB: pg://${DB_HOST:-postgres}:${PORT:-5432}?u=${USER}&p=${PASSWORD}&d=nocodb
+    volumes:
+      - ${DATA_DIR:-./data}:/usr/app/data
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      - glance.icon=di:nocodb
+      - glance.url=${GLANCE_URL}
+      - glance.name=Nocodb
+      - glance.description=NocoDB provides an intuitive spreadsheet interface for creating online databases.

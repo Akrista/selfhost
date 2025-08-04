@@ -1,0 +1,26 @@
+name: ${STACK_NAME:-metabase}
+networks:
+  proxy:
+    name: ${PROXY_NETWORK:-proxy}
+    external: true
+  database:
+    name: ${DATABASE_NETWORK:-database}
+    external: true
+services:
+  n8n:
+    image: docker.n8n.io/n8nio/n8n
+    container_name: n8n
+    restart: unless-stopped
+    profiles:
+      - ${SERVICE_PROFILE:-app}
+    networks:
+      - proxy
+      - database
+    volumes:
+      - ${DATA_DIR:-./data}:/home/node/.n8n
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      - glance.icon=di:n8n
+      - glance.url=${GLANCE_URL}
+      - glance.name=n8n
+      - glance.description=n8n is a workflow automation platform that uniquely combines AI capabilities with business process automation

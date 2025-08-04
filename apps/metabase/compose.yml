@@ -1,0 +1,45 @@
+name: ${STACK_NAME:-metabase}
+networks:
+  proxy:
+    name: ${PROXY_NETWORK:-proxy}
+    external: true
+  database:
+    name: ${DATABASE_NETWORK:-database}
+    external: true
+services:
+  metabase:
+    image: metabase/metabase:latest
+    container_name: metabase
+    restart: unless-stopped
+    profiles:
+      - ${SERVICE_PROFILE:-app}
+    networks:
+      - proxy
+      - database
+    environment:
+      - TZ=${TZ}
+      - JAVA_TIMEZONE=${TZ}
+      - MB_DB_TYPE=${DBTYPE}
+      - MB_DB_DBNAME=${DBNAME}
+      - MB_DB_PORT=${DBPORT}
+      - MB_DB_HOST=${DBHOST}
+      - MB_DB_USER=${DBUSER}
+      - MB_DB_PASS=${DBPASS}
+      # - MUID=$UID
+      # - MGID=$GID
+      # - MB_DB_FILE=/metabase-data/metabase.db
+    volumes:
+      - ${DATA_DIR:-./data}:/metabase-data
+      - ${CFG_DIR:-./cfg}:/metabase
+      # - ./plugins:/plugins
+    healthcheck:
+      test: curl --fail -I http://localhost:3000/api/health || exit 1
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      - glance.icon=di:metabase
+      - glance.url=${GLANCE_URL}
+      - glance.name=Metabase
+      - glance.description=Metabase is a simple, powerful, and beautiful self-hosted analytics platform.

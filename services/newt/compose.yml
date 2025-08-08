@@ -17,6 +17,9 @@ services:
       NEWT_ID: ${ID}
       NEWT_SECRET: ${SECRET}
       TZ: ${TZ:-America/Caracas}
+      DOCKER_SOCKET: /var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     labels:
       - com.centurylinklabs.watchtower.enable=true
       - glance.icon=di:pangolin

@@ -1,0 +1,26 @@
+name: ${STACK_NAME:-silverbullet}
+networks:
+  proxy:
+    name: ${PROXY_NETWORK:-proxy}
+    external: true
+services:
+  silverbullet:
+    image: ghcr.io/silverbulletmd/silverbullet:v2
+    container_name: silverbullet
+    restart: unless-stopped
+    profiles:
+      - ${SERVICE_PROFILE:-app}
+    networks:
+      - proxy
+    # environment:
+    #   - SB_USER=${SB_USER:-admin:admin}
+    volumes:
+      - ${DATA_DIR:-./data}:/space
+    # ports:
+    #   - 3000:3000
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+      - glance.icon=https://raw.githubusercontent.com/silverbulletmd/silverbullet/refs/heads/main/web/images/logo.png
+      - glance.url=${GLANCE_URL}
+      - glance.name=Silverbullet
+      - glance.description=Silverbullet is a tool for managing and organizing your notes and ideas.

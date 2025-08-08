@@ -4,7 +4,7 @@ theme:
   positive-color: 61 66 44
   negative-color: 6 96 59
 pages:
-  - name: Monolith
+  - name: Services
     columns:
       - size: small
         widgets:

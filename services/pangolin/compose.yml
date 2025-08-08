@@ -1,13 +1,15 @@
 name: ${STACK_NAME:-pangolin}
 networks:
   default:
-    name: ${SERVICE_NETWORK:-service}
+    name: ${PANGOLIN_NETWORK:-proxy}
     external: true
 services:
   crowdsec:
     image: crowdsecurity/crowdsec:latest
     container_name: crowdsec
     restart: unless-stopped
+    profiles:
+      - ${SERVICE_PROFILE:-pangolin}
     ports:
       - 6060:6060
     environment:
@@ -41,6 +43,8 @@ services:
     image: fosrl/gerbil
     container_name: gerbil
     restart: unless-stopped
+    profiles:
+      - ${SERVICE_PROFILE:-pangolin}
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
@@ -69,6 +73,8 @@ services:
     image: fosrl/pangolin
     container_name: pangolin
     restart: unless-stopped
+    profiles:
+      - ${SERVICE_PROFILE:-pangolin}
     environment:
       TZ: ${TZ:-America/Caracas}
     healthcheck:
@@ -92,6 +98,8 @@ services:
     image: traefik
     container_name: traefik
     restart: unless-stopped
+    profiles:
+      - ${SERVICE_PROFILE:-pangolin}
     network_mode: service:gerbil
     environment:
       TZ: ${TZ:-America/Caracas}
@@ -107,8 +115,20 @@ services:
       - ${CFG_DIR:-./cfg}/traefik:/etc/traefik:ro
       - ${CFG_DIR:-./cfg}/letsencrypt:/letsencrypt
       - ${CFG_DIR:-./cfg}/traefik/logs:/var/log/traefik
+      - ${CFG_DIR:-./cfg}/traefik/plugins-storage:/plugins-storage:rw
+      - ${CFG_DIR:-./cfg}/traefik/plugins-storage:/plugins-local:rw
+      - ${CFG_DIR:-./cfg}/traefik/rules:/rules
+      - ${CFG_DIR:-./cfg}/traefik/public_html:/var/www/html:ro
     labels:
       - com.centurylinklabs.watchtower.enable=true
       - glance.icon=di:traefik
       - glance.name=Traefik
-      - glance.description=Traefik is a modern HTTP reverse proxy and load balancer that makes deploying microservices easy. It supports multiple backends (Docker, Swarm, Kubernetes, AWS ELB, ...) and multiple frontend rules (Host, Path, Method, Headers, Query, ...) and can be extended with plugins.
+      - glance.description=Traefik is a modern HTTP reverse proxy and load balancer that makes deploying microservices easy.
+  error-pages:
+    image: ghcr.io/tarampampam/error-pages:3
+    container_name: error-pages
+    restart: unless-stopped
+    profiles:
+      - ${SERVICE_PROFILE:-pangolin}
+    environment:
+      TEMPLATE_NAME: hacker-terminal

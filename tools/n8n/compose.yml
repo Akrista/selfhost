@@ -1,7 +1,7 @@
-name: ${STACK_NAME:-metabase}
+name: ${STACK_NAME:-n8n}
 networks:
   proxy:
-    name: ${PROXY_NETWORK:-proxy}
+    name: ${TOOL_NETWORK:-proxy}
     external: true
   database:
     name: ${DATABASE_NETWORK:-database}
@@ -12,14 +12,15 @@ services:
     container_name: n8n
     restart: unless-stopped
     profiles:
-      - ${SERVICE_PROFILE:-app}
+      - ${SERVICE_PROFILE:-tool}
     networks:
       - proxy
       - database
+    env_file: .env
     volumes:
       - ${DATA_DIR:-./data}:/home/node/.n8n
     labels:
-      - "com.centurylinklabs.watchtower.enable=true"
+      - com.centurylinklabs.watchtower.enable=true
       - glance.icon=di:n8n
       - glance.url=${GLANCE_URL}
       - glance.name=n8n

@@ -13,14 +13,16 @@ services:
     restart: unless-stopped
     profiles:
       - ${SERVICE_PROFILE:-tool}
+    environment:
+      PG_URL: ${PG_URL:-postgresql://user:password@postgres:5432/bytebase}
     networks:
       - proxy
       - database
     # ports:
     #   - 8080:8080
-    volumes:
-      - ${DATA_DIR:-./data}:/var/opt/bytebase
-    command: --data /var/opt/bytebase --pg ${PG_URL:-postgresql://user:password@postgres:5432/bytebase} --external-url ${EXTERNAL_URL:-https://bytebase.domain.com} --disable-sample --disable-metric
+    # volumes:
+    #   - ${DATA_DIR:-./data}:/var/opt/bytebase
+    command: --external-url ${EXTERNAL_URL:-https://bytebase.domain.com}
     labels:
       - com.centurylinklabs.watchtower.enable=true
       - glance.icon=https://www.bytebase.com/favicon/favicon.png

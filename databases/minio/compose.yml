@@ -1,0 +1,31 @@
+name: ${STACK_NAME:-minio}
+networks:
+  database:
+    name: ${DATABASE_NETWORK:-database}
+    external: true
+services:
+  minio:
+    image: quay.io/minio/minio:RELEASE.2025-04-22T22-12-26Z
+    container_name: minio
+    restart: unless-stopped
+    profiles:
+      - ${SERVICE_PROFILE:-database}
+    networks:
+      - database
+    ports:
+      - 9000:9000
+      - 9001:9001
+    environment:
+      MINIO_ROOT_USER: ${USER}
+      MINIO_ROOT_PASSWORD: ${PASS}
+      MINIO_DEFAULT_BUCKETS: ${BUCKET}
+      TZ: ${TZ:-America/Caracas}
+      minio_INITDB_ARGS: --data-checksums
+    command: server /data --console-address ":9001"
+    volumes:
+      - ${DATA_DIR:-./data}:/data
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+      - glance.icon=di:minio
+      - glance.name=minio
+      - glance.description=MinIO is a high-performance, S3 compatible object storage system
